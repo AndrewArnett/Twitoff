@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 DB = SQLAlchemy()
 
+
 class User(DB.Model):
     """Twitter users corresponding to Tweets."""
     id = DB.Column(DB.BigInteger, primary_key=True)
@@ -10,6 +11,7 @@ class User(DB.Model):
 
     def __repr__(self):
         return '-User {}-'.format(self.name)
+
 
 class Tweet(DB.Model):
     """Tweet text and data."""
@@ -20,3 +22,12 @@ class Tweet(DB.Model):
 
     def __repr__(self):
         return '-Tweet {}-'.format(self.text)
+
+
+def insert_example_users():
+    """Example data to play with."""
+    austen = User(id=1, name='austen')
+    elon = User(id=2, name='elonmusk')
+    DB.session.add(austen)
+    DB.session.add(elon)
+    DB.session.commit()
