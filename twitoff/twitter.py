@@ -21,13 +21,12 @@ def add_or_update_user(username):
     """Add or update a user and their Tweets, error if not a Twitter user."""
     try:
         twitter_user = TWITTER.get_user(username)
-        print(twitter_user)
         db_user = (User.query.get(twitter_user.id) or 
                    User(id=twitter_user.id, name=username))
         DB.session.add(db_user)
         # Lets get the tweets - focusing on primary (not retweet/reply)
         tweets = twitter_user.timeline(
-            count = 200, exclude_replies=True, include_rts=False,
+            count=200, exclude_replies=True, include_rts=False,
             tweet_mode='extended', since_id=db_user.newest_tweet_id
         )
         if tweets:

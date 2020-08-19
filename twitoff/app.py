@@ -2,7 +2,7 @@
 from flask import Flask, render_template, request
 from .models import DB, User
 from .predict import predict_user
-from .twitter import insert_example_users
+from .twitter import add_or_update_user, insert_example_users
 
 
 def create_app():
@@ -18,8 +18,8 @@ def create_app():
         return render_template('base.html', title='Home',
                                users=User.query.all())
     
-    app.route('/user', methods=['POST'])
-    app.route('/user/<name>', methods=['GET'])
+    @app.route('/user', methods=['POST'])
+    @app.route('/user/<name>', methods=['GET'])
     def user(name=None, message=''):
         name = name or request.values['user_name']
         try:
@@ -34,7 +34,7 @@ def create_app():
                                message=message)
 
     @app.route('/compare', methods=['POST'])
-    def compare():
+    def compare(message=''):
         user1, user2 = sorted([request.values['user1'],
                                request.values['user2']])
         if user1 == user2:
@@ -59,4 +59,5 @@ def create_app():
         DB.drop_all()
         DB.create_all()
         return render_template('base.html', title='Reset database!')
+   
     return app
